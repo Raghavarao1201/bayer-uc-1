@@ -1,5 +1,3 @@
-
-# Security Group for ALB
 resource "aws_security_group" "alb_sg" {
   vpc_id = var.vpc_id
 
@@ -25,7 +23,6 @@ resource "aws_security_group" "alb_sg" {
   }
 }
 
-# ALB
 resource "aws_lb" "alb" {
   name               = "sales-person-alb"
   internal           = false
@@ -64,14 +61,13 @@ resource "aws_lb_listener" "http" {
   }
 }
 
-# Listener Rule for Patient Service Path
 resource "aws_lb_listener_rule" "sales-person_path" {
   listener_arn = aws_lb_listener.http.arn
   priority     = 100
 
   action {
     type             = "forward"
-    target_group_arn = aws_lb_target_group.patient_target.arn
+    target_group_arn = aws_lb_target_group.sales-person_target.arn
   }
 
   condition {

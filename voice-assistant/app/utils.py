@@ -1,5 +1,3 @@
-# app/utils.py
-
 import json
 
 def format_prompt(transcript: str) -> str:

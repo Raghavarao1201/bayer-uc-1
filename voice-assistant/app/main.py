@@ -3,6 +3,7 @@ from app.transcribe import transcribe_audio
 from app.bedrock import get_llm_response
 from app.polly import synthesize_speech
 from app.followup import trigger_followup
+from fastapi.responses import StreamingResponse
 
 app = FastAPI()
 
@@ -16,4 +17,4 @@ async def process_audio(request: Request):
 
     trigger_followup(transcript, llm_response)
 
-    return audio_response
+    return StreamingResponse(content=audio_response, media_type="audio/mpeg")
