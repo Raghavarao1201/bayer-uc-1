@@ -15,5 +15,5 @@ def get_llm_response(transcript: str) -> str:
         body=json.dumps(body)
     )
 
-    response_body = json.loads(response['body'].read())
-    return response_body.get("completion", "Sorry, I didn't get that.")
+    result = json.loads(response['body'].read())
+    return result.get("completion", "Sorry, I didn't get that.")

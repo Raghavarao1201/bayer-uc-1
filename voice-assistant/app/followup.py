@@ -10,6 +10,6 @@ def trigger_followup(transcript: str, response: str):
 
     lambda_client.invoke(
         FunctionName="storeCallSummary",
-        InvocationType="Event",  # Async
+        InvocationType="Event",
         Payload=payload
     )

@@ -1,11 +1,11 @@
 
 # vpc
 resource "aws_vpc" "bayer_vpc" {
-    cidr_block = var.cidr_block
+  cidr_block = var.cidr_block
 
-    tags = {
-        Name = "bayer-vpc"
-    }
+  tags = {
+    Name = "bayer-vpc"
+  }
 }
 
 resource "aws_subnet" "public_subnet_1" {
@@ -16,26 +16,26 @@ resource "aws_subnet" "public_subnet_1" {
 }
 
 resource "aws_subnet" "public_subnet_2" {
-    vpc_id  = aws_vpc.bayer_vpc.id
-    cidr_block = var.public_subnet_2_cidr_block
-    map_public_ip_on_launch = true
-    availability_zone = var.public_subnet_2_az
+  vpc_id                  = aws_vpc.bayer_vpc.id
+  cidr_block              = var.public_subnet_2_cidr_block
+  map_public_ip_on_launch = true
+  availability_zone       = var.public_subnet_2_az
 }
 
 resource "aws_subnet" "private_subnet_1" {
-    vpc_id = aws_vpc.bayer_vpc.id
-    cidr_block = var.private_subnet_1_cidr_block
-    availability_zone = var.private_subnet_1_az
+  vpc_id            = aws_vpc.bayer_vpc.id
+  cidr_block        = var.private_subnet_1_cidr_block
+  availability_zone = var.private_subnet_1_az
 }
 
 resource "aws_subnet" "private_subnet_2" {
-    vpc_id = aws_vpc.bayer_vpc.id
-    cidr_block = var.private_subnet_2_cidr_block
-    availability_zone = var.private_subnet_2_az
+  vpc_id            = aws_vpc.bayer_vpc.id
+  cidr_block        = var.private_subnet_2_cidr_block
+  availability_zone = var.private_subnet_2_az
 }
 
 resource "aws_internet_gateway" "bayer_igw" {
-    vpc_id = aws_vpc.bayer_vpc.id
+  vpc_id = aws_vpc.bayer_vpc.id
 }
 
 resource "aws_route_table" "public_route_table" {
@@ -58,9 +58,9 @@ resource "aws_route_table_association" "public_route_association_2" {
 }
 
 resource "aws_eip" "nat_eip" {
-    tags = {
-        Name = "bayer-eip"
-    }
+  tags = {
+    Name = "bayer-eip"
+  }
 }
 
 resource "aws_nat_gateway" "nat_gw" {
@@ -72,7 +72,7 @@ resource "aws_route_table" "private_route_table" {
   vpc_id = aws_vpc.bayer_vpc.id
 
   route {
-    cidr_block = "0.0.0.0/0"
+    cidr_block     = "0.0.0.0/0"
     nat_gateway_id = aws_nat_gateway.nat_gw.id
   }
 }

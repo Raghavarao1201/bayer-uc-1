@@ -2,8 +2,8 @@ module "vpc" {
   source = "./modules/vpc"
 
   cidr_block                  = var.cidr_block
-  public_subnet_1_cidr_block = var.public_subnet_1_cidr_block
-  public_subnet_2_cidr_block = var.public_subnet_2_cidr_block
+  public_subnet_1_cidr_block  = var.public_subnet_1_cidr_block
+  public_subnet_2_cidr_block  = var.public_subnet_2_cidr_block
   private_subnet_1_cidr_block = var.private_subnet_1_cidr_block
   private_subnet_2_cidr_block = var.private_subnet_2_cidr_block
 
@@ -14,9 +14,9 @@ module "vpc" {
 }
 
 module "alb" {
-  source             = "./modules/alb"
-  vpc_id             = module.vpc.vpc_id
-  public_subnet_ids  = module.vpc.public_subnet_ids
+  source            = "./modules/alb"
+  vpc_id            = module.vpc.vpc_id
+  public_subnet_ids = module.vpc.public_subnet_ids
 }
 
 module "s3" {
@@ -33,4 +33,9 @@ module "ecs" {
   patient_target_group_arn = module.alb.sales-person_target_group_arn
   vpc_id                   = module.vpc.vpc_id
   private_subnet_ids       = module.vpc.private_subnet_ids
+}
+
+module "lambda" {
+  source               = "./modules/lambda"
+  s3_audio_bucket_name = module.s3.bucket_name
 }

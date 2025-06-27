@@ -22,3 +22,8 @@ output "cloudwatch_log_group_name" {
   value       = module.ecs.cloudwatch_log_group_name
   description = "Name of the CloudWatch log group"
 }
+
+output "lambda_function_name" {
+  value       = module.lambda.lambda_function_name
+  description = "Name of the Lambda function"
+}

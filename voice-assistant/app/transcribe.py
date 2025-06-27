@@ -1,38 +1,42 @@
 import boto3
-import tempfile
 import os
+import uuid
+
+def upload_audio_to_s3(audio_stream: bytes) -> str:
+    s3 = boto3.client("s3")
+    bucket = os.getenv("AUDIO_BUCKET")  # pulled from ECS environment variable
+    key = f"calls/{uuid.uuid4()}.wav"
+
+    s3.put_object(
+        Bucket=bucket,
+        Key=key,
+        Body=audio_stream,
+        ContentType="audio/wav"
+    )
+
+    return f"s3://{bucket}/{key}"
 
 def transcribe_audio(audio_stream: bytes) -> str:
-    # Save incoming audio to a temporary file
-    with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as tmp:
-        tmp.write(audio_stream)
-        audio_path = tmp.name
-
+    s3_uri = upload_audio_to_s3(audio_stream)
     transcribe = boto3.client("transcribe")
-    job_name = f"job-{os.path.basename(audio_path)}"
-    job_uri = f"s3://your-bucket/{os.path.basename(audio_path)}"
-
-    # NOTE: You must upload to S3 before using Transcribe
-    s3 = boto3.client("s3")
-    s3.upload_file(audio_path, "your-bucket", os.path.basename(audio_path))
+    job_name = f"job-{uuid.uuid4()}"
 
     transcribe.start_transcription_job(
         TranscriptionJobName=job_name,
-        Media={'MediaFileUri': job_uri},
+        Media={'MediaFileUri': s3_uri},
         MediaFormat='wav',
         LanguageCode='en-US'
     )
 
-    # Poll until job is done
     while True:
         status = transcribe.get_transcription_job(TranscriptionJobName=job_name)
         if status['TranscriptionJob']['TranscriptionJobStatus'] in ['COMPLETED', 'FAILED']:
             break
 
     if status['TranscriptionJob']['TranscriptionJobStatus'] == 'COMPLETED':
-        transcript_uri = status['TranscriptionJob']['Transcript']['TranscriptFileUri']
         import requests
-        transcript_json = requests.get(transcript_uri).json()
-        return transcript_json['results']['transcripts'][0]['transcript']
+        transcript_url = status['TranscriptionJob']['Transcript']['TranscriptFileUri']
+        result = requests.get(transcript_url).json()
+        return result['results']['transcripts'][0]['transcript']
 
-    return "Unable to transcribe"
+    return "Transcription failed."

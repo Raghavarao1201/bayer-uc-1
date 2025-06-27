@@ -79,10 +79,10 @@ resource "aws_security_group" "ecs_sg" {
   vpc_id = var.vpc_id
 
   ingress {
-    from_port         = 8080
-    to_port           = 8080
-    protocol          = "tcp"
-    security_groups   = [var.alb_security_group_id]
+    from_port       = 8080
+    to_port         = 8080
+    protocol        = "tcp"
+    security_groups = [var.alb_security_group_id]
   }
 
   egress {
@@ -147,8 +147,8 @@ resource "aws_ecs_service" "sales_agent_service" {
   desired_count   = 2
 
   network_configuration {
-    subnets         = var.private_subnet_ids
-    security_groups = [aws_security_group.ecs_sg.id]
+    subnets          = var.private_subnet_ids
+    security_groups  = [aws_security_group.ecs_sg.id]
     assign_public_ip = false
   }
 
