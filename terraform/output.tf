@@ -27,3 +27,11 @@ output "lambda_function_name" {
   value       = module.lambda.lambda_function_name
   description = "Name of the Lambda function"
 }
+
+output "chime_capture_bucket" {
+  value = module.chime.chime_capture_bucket
+}
+
+output "chime_capture_role_arn" {
+  value = module.chime.chime_capture_role_arn
+}

@@ -9,6 +9,10 @@ public_subnet_2_az  = "us-east-1b"
 private_subnet_1_az = "us-east-1a"
 private_subnet_2_az = "us-east-1b"
 
-environment     = "prod"
+environment     = "dev"
 container_image = "994466158061.dkr.ecr.us-east-1.amazonaws.com/repo:sales-agent"
+
+aws_region   = "us-east-1"
+ecs_endpoint = "http://sales-person-alb-2101209377.us-east-1.elb.amazonaws.com/process-audio/"
+
 

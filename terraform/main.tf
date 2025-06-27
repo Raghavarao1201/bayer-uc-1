@@ -39,3 +39,11 @@ module "lambda" {
   source               = "./modules/lambda"
   s3_audio_bucket_name = module.s3.bucket_name
 }
+
+module "chime" {
+  source       = "./modules/chime"
+  environment  = var.environment
+  aws_region   = var.aws_region
+  ecs_endpoint = var.ecs_endpoint
+}
+

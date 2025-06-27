@@ -44,3 +44,13 @@ variable "container_image" {
   type        = string
   description = "ECR image URI for ECS container"
 }
+
+
+variable "aws_region" {
+  type = string
+}
+
+variable "ecs_endpoint" {
+  type        = string
+  description = "Public FastAPI ALB URL to send audio for AI response"
+}
